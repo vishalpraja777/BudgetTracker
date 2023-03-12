@@ -40,14 +40,15 @@ public class MyCursorAdapter extends CursorAdapter {
         ImageView img = view.findViewById(R.id.imgView);
 
 
-        // Get the integer values from the cursor
         int time = cursor.getInt(cursor.getColumnIndexOrThrow("time"));
         int amount = cursor.getInt(cursor.getColumnIndexOrThrow("amount"));
         String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
 
-        // Concatenate the values as a string and display in the TextView
+
+        String date = new java.text.SimpleDateFormat("dd/MMM/yyyy HH:mm").format(new java.util.Date (time*1000L));
 
         dateTv.setText(String.valueOf(time));
+        dateTv.setText(date);
         amountTv.setText(String.valueOf(amount));
 
         if(type.equals("expense")){

@@ -13,4 +13,7 @@
     <color name="darkGreen">#00C04B</color>
     <color name="blue">#24A0ED</color>
     <color name="darkBlue">#1F8BCD</color>
+    <color name="offwhite">#80FFFFFF</color>
+    <color name="orange">#FF6500</color>
+    <color name="border">#DE5816</color>
 </resources>

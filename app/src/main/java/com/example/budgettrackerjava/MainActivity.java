@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,11 +17,36 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnExp,btnInc,btnView,btnGoal;
     TextView goalTv,currExpenseTv,balanceTv;
     DBhelper DB;
+    FirebaseAuth auth;
+    FirebaseUser user;
+
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.mybutton) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getApplicationContext(),loginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +60,20 @@ public class MainActivity extends AppCompatActivity {
         currExpenseTv = findViewById(R.id.currExpense);
         balanceTv = findViewById(R.id.balance);
 
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
         DB = new DBhelper(this);
 
-        // First, get a reference to the shared preferences object
+        if(user == null){
+            Intent intent = new Intent(getApplicationContext(),loginActivity.class);
+            startActivity(intent);
+            finish();
+        }
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Next, create an editor object to make changes to the preferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // Now, save your integer variable to the preferences
-//        int goalShared = 0;
-//        editor.putInt("goalKey", goalShared);
-//        editor.apply();
 
 
         int goal = sharedPreferences.getInt("goalKey", 0);
@@ -79,9 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 // get the input fields from the pop-up window layout
                 final EditText input1 = popupView.findViewById(R.id.input1);
                 final TextView heading = popupView.findViewById(R.id.heading);
-//                final EditText input2 = popupView.findViewById(R.id.input2);
-
-//                input1.setHint("Enter Amount in Rs.");
                 heading.setText("Set New Goal:");
 
 
@@ -90,15 +116,14 @@ public class MainActivity extends AppCompatActivity {
                 submitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // retrieve the inputs from the input fields
+
                         String input1Value = input1.getText().toString();
 
-                        // do something with the inputs (e.g. display them in a toast)
 
                         editor.putInt("goalKey", Integer.parseInt(input1Value));
                         editor.apply();
                             Toast.makeText(MainActivity.this, "Goal Set" , Toast.LENGTH_SHORT).show();
-                        // dismiss the pop-up window
+
                         popupWindow.dismiss();
                         int goal = sharedPreferences.getInt("goalKey", 0);
                         int total = DB.getTotalExpense();
@@ -113,24 +138,18 @@ public class MainActivity extends AppCompatActivity {
         btnExp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // inflate the pop-up window layout
                 View popupView = getLayoutInflater().inflate(R.layout.popup_layout, null);
 
-                // create the pop-up window
                 int width = LinearLayout.LayoutParams.MATCH_PARENT;
                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                boolean focusable = true; // lets taps outside the pop-up also dismiss it
+                boolean focusable = true;
                 final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-                // show the pop-up window
                 popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-                // get the input fields from the pop-up window layout
                 final EditText input1 = popupView.findViewById(R.id.input1);
                 final TextView heading = popupView.findViewById(R.id.heading);
-//                final EditText input2 = popupView.findViewById(R.id.input2);
 
-//                input1.setHint("Enter Amount in Rs.");
                 heading.setText("Add Expenditure:");
 
 

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="#80000000"
         app:cardCornerRadius="20dp"
         app:cardPreventCornerOverlap="true">
 
@@ -26,7 +26,7 @@
                 android:layout_height="50dp"
                 android:text="Add Expenditure"
 
-                android:textColor="@color/black"
+                android:textColor="@color/textwhite"
                 android:textSize="24sp" />
 
             <EditText
@@ -37,8 +37,8 @@
                 android:hint="Enter Amount in Rs."
                 android:inputType="number"
                 android:padding="8dp"
-                android:textColor="@color/black"
-                android:textColorHint="#323232" />
+                android:textColor="@color/textwhite"
+                android:textColorHint="#80F0F0F0" />
 
             <Button
                 android:id="@+id/submit_button"
